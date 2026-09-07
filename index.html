@@ -61,10 +61,10 @@
             <div class="hero-meta">
               <div><small>DATE</small><strong>26 SEP 2026</strong></div>
               <div><small>VENUE</small><strong>TERIGE BHAVANA</strong></div>
-              <div><small>FEE</small><strong>₹499</strong></div>
+              <div><small>FEE</small><strong>₹500</strong></div>
             </div>
             <div class="hero-actions">
-              <a class="btn" href="#register">Register Now — ₹499</a
+              <a class="btn" href="#register">Register Now — ₹500</a
               ><a class="text-link" href="#event">Explore Event ↓</a>
             </div>
           </div>
@@ -84,11 +84,11 @@
         <div class="marquee-track">
           <span>REGISTRATIONS OPEN</span><i>•</i
           ><span>APPLY BEFORE 26 SEPTEMBER 2026</span><i>•</i
-          ><span>LIMITED CAPACITY</span><i>•</i><span>VISITOR FEE ₹499</span
+          ><span>LIMITED CAPACITY</span><i>•</i><span>VISITOR FEE ₹500</span
           ><i>•</i><span>SECURE YOUR PLACE</span><i>•</i>
           <span>REGISTRATIONS OPEN</span><i>•</i
           ><span>APPLY BEFORE 26 SEPTEMBER 2026</span><i>•</i
-          ><span>LIMITED CAPACITY</span><i>•</i><span>VISITOR FEE ₹499</span
+          ><span>LIMITED CAPACITY</span><i>•</i><span>VISITOR FEE ₹500</span
           ><i>•</i>
         </div>
       </div>
@@ -431,7 +431,7 @@
                 KARNATAKA 560072</strong
               >
             </div>
-            <div><small>VISITOR FEE</small><strong>₹499</strong></div>
+            <div><small>VISITOR FEE</small><strong>₹500</strong></div>
           </div>
         </div>
       </section>
@@ -442,7 +442,7 @@
             <span class="section-kicker">REGISTRATION</span>
             <h2>Secure your place.</h2>
             <p>
-              Complete the ₹499 payment first. Then enter your details and
+              Complete the payment first. Then enter your details and
               upload your payment screenshot for submission.
             </p>
             <div class="steps">
@@ -450,7 +450,7 @@
               ><span><b>03</b> Confirmation</span>
             </div>
             <button class="pay-btn" id="openPayment">
-              Scan &amp; Pay ₹499 <span>↗</span>
+              Scan &amp; Pay <span id="payBtnAmount">₹500</span> <span>↗</span>
             </button>
             <p class="small-note">
               Use the official UPI QR supplied by EAF before publishing.
@@ -515,6 +515,22 @@
                       placeholder="Business / correspondence address"
                     ></textarea><span class="error-msg" id="error-address"></span>
                   </label>
+                  <label
+                    >Event Facilities<select name="event_facility" id="eventFacility" required>
+                      <option value="">Select Event Facility</option>
+                      <option value="Standee (₹500)">Standee (₹500)</option>
+                      <option value="Show Table (₹500)">Show Table (₹500)</option>
+                      <option value="Standee + Show Table (₹500 + ₹500)">Standee + Show Table (₹500 + ₹500)</option>
+                      <option value="Not Required">Not Required</option>
+                    </select><span class="error-msg" id="error-event_facility"></span></label
+                  >
+                  <div class="total-payable-card" id="priceSummaryBox">
+                    <label>Total Payable Price</label>
+                    <div class="total-payable-box">
+                      <strong id="summaryTotalAmount">₹500</strong>
+                      <small>(Reg: <span id="summaryRegFee">₹500</span> + Facility: <span id="summaryFacilityFee">₹0</span>)</small>
+                    </div>
+                  </div>
                 </div>
                 <div class="payment-proof">
                   <div class="proof-head">
@@ -562,6 +578,14 @@
             successfully.
           </p>
           <div class="success-details">
+            <div class="success-info-grid">
+              <div><small>REGISTRATION ID</small><strong id="successRegId">EAF2026-001</strong></div>
+              <div><small>ATTENDANCE</small><strong id="successAttendance">SEATED</strong></div>
+              <div id="successSeatRow"><small>SEAT NUMBER</small><strong id="successSeatNo">01</strong></div>
+              <div><small>EVENT FACILITY</small><strong id="successFacility">Not Required</strong></div>
+              <div><small>TOTAL AMOUNT</small><strong id="successTotal">₹500</strong></div>
+            </div>
+            <br />
             <b>26 September 2026</b><span>Terige Bhavana · Bengaluru</span>
           </div>
           <a class="btn" href="#home">Back to Home</a>

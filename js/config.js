@@ -6,11 +6,10 @@ const SITE_CONFIG = {
   venue: "TERIGE BHAVANA, 11 BLOCK, 2ND STAGE, NAAGARABHAVI, BENGALURU, KARNATAKA 560072",
   phone: "+91 9743334433",
   email: "connect.eaf@gmail.com",
-  registrationFee: 499,
+  registrationFee: 500,
 
   // Add your real backend / form endpoint here.
-  // Leave blank to run in demo mode.
-  formEndpoint: "",
+  formEndpoint: "api/register.php",
 
   // Optional success redirect. Leave blank to use the built-in success screen.
   successRedirect: "",
@@ -21,6 +20,6 @@ const SITE_CONFIG = {
 const PAYMENT_CONFIG = {
   // Replace with the official EAF UPI ID.
   upiId: "9901155111@sbi",
-  amount: 499,
+  amount: 500,
   qrImage: "assets/payment/QRC0de.jpeg"
 };

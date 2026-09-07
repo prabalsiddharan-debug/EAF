@@ -16,62 +16,137 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = $("#submitBtn");
   const success = $("#successState");
 
+  // Dynamic pricing elements
+  const eventFacilitySelect = $("#eventFacility");
+  const summaryRegFee = $("#summaryRegFee");
+  const summaryFacilityFee = $("#summaryFacilityFee");
+  const summaryTotalAmount = $("#summaryTotalAmount");
+  const payBtnAmount = $("#payBtnAmount");
+  const modalPayAmount = $("#modalPayAmount");
+  const mobileRegisterAmount = $("#mobileRegisterAmount");
+
+  let currentFacilityFee = 0;
+  let currentTotalAmount = SITE_CONFIG.registrationFee || 500;
+
+  function calculatePrice() {
+    const baseFee = SITE_CONFIG.registrationFee || 500;
+    const selectedFacility = eventFacilitySelect ? eventFacilitySelect.value : "";
+
+    if (selectedFacility === "Standee (₹500)") {
+      currentFacilityFee = 500;
+    } else if (selectedFacility === "Show Table (₹500)") {
+      currentFacilityFee = 500;
+    } else if (selectedFacility === "Standee + Show Table (₹500 + ₹500)") {
+      currentFacilityFee = 1000;
+    } else if (selectedFacility === "Not Required") {
+      currentFacilityFee = 0;
+    } else {
+      currentFacilityFee = 0;
+    }
+
+    currentTotalAmount = baseFee + currentFacilityFee;
+
+    if (summaryRegFee) summaryRegFee.textContent = `₹${baseFee}`;
+    if (summaryFacilityFee) summaryFacilityFee.textContent = `₹${currentFacilityFee}`;
+    if (summaryTotalAmount) summaryTotalAmount.textContent = `₹${currentTotalAmount}`;
+    if (payBtnAmount) payBtnAmount.textContent = `₹${currentTotalAmount}`;
+    if (modalPayAmount) modalPayAmount.textContent = `₹${currentTotalAmount}`;
+    if (mobileRegisterAmount) mobileRegisterAmount.textContent = `₹${currentTotalAmount}`;
+
+    configurePayment();
+  }
+
   function configurePayment() {
-    qr.src = PAYMENT_CONFIG.qrImage;
-    upiText.textContent = PAYMENT_CONFIG.upiId;
+    if (qr) qr.src = PAYMENT_CONFIG.qrImage;
+    if (upiText) upiText.textContent = PAYMENT_CONFIG.upiId;
     if (PAYMENT_CONFIG.upiId && !PAYMENT_CONFIG.upiId.includes("YOUR_OFFICIAL")) {
       const params = new URLSearchParams({
         pa: PAYMENT_CONFIG.upiId,
         pn: "EAF Entrepreneurs Awareness Forum",
-        am: String(PAYMENT_CONFIG.amount),
+        am: String(currentTotalAmount),
         cu: "INR"
       });
-      upiLink.href = "upi://pay?" + params.toString();
-      upiLink.hidden = false;
+      if (upiLink) {
+        upiLink.href = "upi://pay?" + params.toString();
+        upiLink.hidden = false;
+      }
     }
   }
-  configurePayment();
 
-  window.addEventListener("scroll", () => header.classList.toggle("scrolled", window.scrollY > 20));
+  calculatePrice();
 
-  menu.addEventListener("click", () => {
-    const open = nav.classList.toggle("open");
-    menu.setAttribute("aria-expanded", String(open));
-  });
-  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("open")));
+  if (eventFacilitySelect) {
+    eventFacilitySelect.addEventListener("change", () => {
+      calculatePrice();
+      validateEventFacility(false);
+    });
+  }
+
+  window.addEventListener("scroll", () => header && header.classList.toggle("scrolled", window.scrollY > 20));
+
+  if (menu && nav) {
+    menu.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      menu.setAttribute("aria-expanded", String(open));
+    });
+    nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("open")));
+  }
 
   document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener("click", (e) => {
     const target = document.querySelector(a.getAttribute("href"));
-    if (target) { e.preventDefault(); target.scrollIntoView({behavior:"smooth", block:"start"}); }
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth", block: "start" }); }
   }));
 
   const observer = new IntersectionObserver(entries => entries.forEach(entry => {
     if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); }
-  }), {threshold:.12});
+  }), { threshold: .12 });
   document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 
-  function openModal() { modal.classList.add("open"); modal.setAttribute("aria-hidden","false"); document.body.style.overflow="hidden"; }
-  function closeModal() { modal.classList.remove("open"); modal.setAttribute("aria-hidden","true"); document.body.style.overflow=""; }
-  $("#openPayment").addEventListener("click", openModal);
-  $("#closePayment").addEventListener("click", closeModal);
-  $("#closePaymentBtn").addEventListener("click", closeModal);
-  document.addEventListener("keydown", e => { if(e.key === "Escape" && modal.classList.contains("open")) closeModal(); });
-
-  $("#copyUpi").addEventListener("click", async () => {
-    try { await navigator.clipboard.writeText(PAYMENT_CONFIG.upiId); $("#copyUpi").textContent = "Copied"; setTimeout(()=>$("#copyUpi").textContent="Copy",1200); }
-    catch { alert("Copy is unavailable. Please copy the UPI ID manually."); }
-  });
-
-  $("#paymentDone").addEventListener("click", () => {
-    if (PAYMENT_CONFIG.upiId.includes("YOUR_OFFICIAL")) {
-      alert("Please configure the official EAF UPI ID and QR code before using payment.");
-      return;
+  function openModal() {
+    if (modal) {
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
     }
-    closeModal();
-    paymentStatus.textContent = "Payment marked as completed";
-    paymentStatus.style.color = "#16834b";
-    fields.scrollIntoView({behavior:"smooth", block:"center"});
-  });
+  }
+  function closeModal() {
+    if (modal) {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+  }
+  if ($("#openPayment")) $("#openPayment").addEventListener("click", openModal);
+  if ($("#closePayment")) $("#closePayment").addEventListener("click", closeModal);
+  if ($("#closePaymentBtn")) $("#closePaymentBtn").addEventListener("click", closeModal);
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && modal && modal.classList.contains("open")) closeModal(); });
+
+  if ($("#copyUpi")) {
+    $("#copyUpi").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(PAYMENT_CONFIG.upiId);
+        $("#copyUpi").textContent = "Copied";
+        setTimeout(() => $("#copyUpi").textContent = "Copy", 1200);
+      } catch {
+        alert("Copy is unavailable. Please copy the UPI ID manually.");
+      }
+    });
+  }
+
+  if ($("#paymentDone")) {
+    $("#paymentDone").addEventListener("click", () => {
+      if (PAYMENT_CONFIG.upiId.includes("YOUR_OFFICIAL")) {
+        alert("Please configure the official EAF UPI ID and QR code before using payment.");
+        return;
+      }
+      closeModal();
+      if (paymentStatus) {
+        paymentStatus.textContent = "Payment marked as completed";
+        paymentStatus.style.color = "#16834b";
+      }
+      if (fields) fields.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
 
   function setError(inputEl, errorId, msg) {
     const errorEl = document.getElementById(errorId);
@@ -84,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validateFname(showError = true) {
-    const el = form.fname;
+    const el = form ? form.fname : null;
     const val = el ? el.value.trim() : "";
     if (!val || val.length < 2) {
       if (showError) setError(el, "error-fname", "Please enter your full name.");
@@ -95,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validateMobile(showError = true) {
-    const el = form.mobile;
+    const el = form ? form.mobile : null;
     const val = el ? el.value.trim() : "";
     const digitsOnly = val.replace(/\D/g, "");
     const isValid = /^[6-9]\d{9}$/.test(digitsOnly) && val.replace(/[\s\-\+\(\)]/g, "").length === digitsOnly.length;
@@ -108,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validateEmail(showError = true) {
-    const el = form.email;
+    const el = form ? form.email : null;
     const val = el ? el.value.trim() : "";
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
     if (!val || !isValid) {
@@ -120,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validateCompanyName(showError = true) {
-    const el = form.company_name;
+    const el = form ? form.company_name : null;
     const val = el ? el.value.trim() : "";
     if (!val) {
       if (showError) setError(el, "error-company_name", "Please enter your company name.");
@@ -131,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validateCompanyType(showError = true) {
-    const el = form.company_type;
+    const el = form ? form.company_type : null;
     const val = el ? el.value : "";
     if (!val) {
       if (showError) setError(el, "error-company_type", "Please select a company type.");
@@ -141,8 +216,19 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
+  function validateEventFacility(showError = true) {
+    const el = eventFacilitySelect;
+    const val = el ? el.value : "";
+    if (!val) {
+      if (showError) setError(el, "error-event_facility", "Please select an event facility.");
+      return false;
+    }
+    clearError(el, "error-event_facility");
+    return true;
+  }
+
   function validateAddress(showError = true) {
-    const el = form.address;
+    const el = form ? form.address : null;
     const val = el ? el.value.trim() : "";
     if (!val || val.length < 5) {
       if (showError) setError(el, "error-address", "Please enter your address.");
@@ -166,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function validateScreenshot(showError = true) {
     const el = screenshot;
-    const file = el.files ? el.files[0] : null;
+    const file = el && el.files ? el.files[0] : null;
     if (!file) {
       if (showError) setError(el, "error-payment_screenshot", "Payment screenshot is required.");
       return false;
@@ -199,26 +285,29 @@ document.addEventListener("DOMContentLoaded", () => {
     if (upiInput) upiInput.addEventListener("input", () => validateUpiId(false));
   }
 
-  screenshot.addEventListener("change", () => {
-    preview.innerHTML = "";
-    if (!validateScreenshot(true)) return;
+  if (screenshot) {
+    screenshot.addEventListener("change", () => {
+      if (preview) preview.innerHTML = "";
+      if (!validateScreenshot(true)) return;
 
-    const file = screenshot.files[0];
-    const img = document.createElement("img");
-    img.alt = "Payment screenshot preview";
-    img.src = URL.createObjectURL(file);
-    preview.appendChild(img);
-    message.textContent = "";
-  });
+      const file = screenshot.files[0];
+      const img = document.createElement("img");
+      img.alt = "Payment screenshot preview";
+      img.src = URL.createObjectURL(file);
+      if (preview) preview.appendChild(img);
+      if (message) message.textContent = "";
+    });
+  }
 
   function validate() {
-    message.textContent = "";
+    if (message) message.textContent = "";
     const validations = [
       { valid: validateFname(true), el: form.fname },
       { valid: validateMobile(true), el: form.mobile },
       { valid: validateEmail(true), el: form.email },
       { valid: validateCompanyName(true), el: form.company_name },
       { valid: validateCompanyType(true), el: form.company_type },
+      { valid: validateEventFacility(true), el: eventFacilitySelect },
       { valid: validateAddress(true), el: form.address },
       { valid: validateUpiId(true), el: $("#upiInput") },
       { valid: validateScreenshot(true), el: screenshot }
@@ -227,42 +316,74 @@ document.addEventListener("DOMContentLoaded", () => {
     const firstInvalid = validations.find((v) => !v.valid);
     if (firstInvalid) {
       if (firstInvalid.el) firstInvalid.el.focus();
-      message.textContent = "Please fill in all required fields correctly before submitting.";
+      if (message) message.textContent = "Please fill in all required fields correctly before submitting.";
       return false;
     }
     return true;
   }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-    if (!PAYMENT_CONFIG.upiId || PAYMENT_CONFIG.upiId.includes("YOUR_OFFICIAL")) {
-      message.textContent = "Payment configuration is not complete. Add the official UPI ID in js/config.js.";
-      return;
-    }
-    if (!SITE_CONFIG.formEndpoint) {
-      message.textContent = "Demo mode: add your formEndpoint in js/config.js to enable real submission.";
-      return;
-    }
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Submitting…";
-    try {
-      const fd = new FormData(form);
-      fd.append("event", "EAF Entrepreneurs Awareness Day 2026");
-      fd.append("amount", String(SITE_CONFIG.registrationFee));
-      const res = await fetch(SITE_CONFIG.formEndpoint, { method: "POST", body: fd });
-      if (!res.ok) throw new Error("Submission failed");
-      if (SITE_CONFIG.successRedirect) window.location.href = SITE_CONFIG.successRedirect;
-      else {
-        document.querySelector(".register-section").hidden = true;
-        success.hidden = false;
-        success.scrollIntoView({ behavior: "smooth" });
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+
+      if (!PAYMENT_CONFIG.upiId || PAYMENT_CONFIG.upiId.includes("YOUR_OFFICIAL")) {
+        if (message) message.textContent = "Payment configuration is not complete. Add the official UPI ID in js/config.js.";
+        return;
       }
-    } catch (err) {
-      message.textContent = "We could not submit your registration. Please try again or contact EAF.";
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Registration";
-    }
-  });
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting…";
+      }
+
+      try {
+        const endpoint = SITE_CONFIG.formEndpoint || "api/register.php";
+        const fd = new FormData(form);
+        fd.append("event", "EAF Entrepreneurs Awareness Day 2026");
+
+        const res = await fetch(endpoint, { method: "POST", body: fd });
+        let data = null;
+        try {
+          data = await res.json();
+        } catch {
+          // Fallback if not JSON
+        }
+
+        if (!res.ok || (data && !data.success)) {
+          throw new Error((data && data.message) ? data.message : "Submission failed");
+        }
+
+        if (SITE_CONFIG.successRedirect) {
+          window.location.href = SITE_CONFIG.successRedirect;
+        } else {
+          // Populate success state details
+          if (data) {
+            if ($("#successRegId")) $("#successRegId").textContent = data.registration_id || "EAF2026";
+            if ($("#successAttendance")) $("#successAttendance").textContent = data.attendance_type || "SEATED";
+            if ($("#successSeatNo")) $("#successSeatNo").textContent = data.seat_number || "N/A";
+            if ($("#successSeatRow")) {
+              $("#successSeatRow").style.display = data.seat_number ? "block" : "none";
+            }
+            if ($("#successFacility")) $("#successFacility").textContent = data.event_facility || (eventFacilitySelect ? eventFacilitySelect.value : "Not Required");
+            if ($("#successTotal")) $("#successTotal").textContent = `₹${data.total_amount || currentTotalAmount}`;
+          }
+
+          const regSection = document.querySelector(".register-section");
+          if (regSection) regSection.hidden = true;
+          if (success) {
+            success.hidden = false;
+            success.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      } catch (err) {
+        if (message) message.textContent = err.message || "We could not submit your registration. Please try again or contact EAF.";
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Registration";
+        }
+      }
+    });
+  }
 });
