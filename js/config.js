@@ -1,0 +1,26 @@
+// EAF website configuration.
+// Replace only the values marked for configuration before production.
+
+const SITE_CONFIG = {
+  eventDate: "26 September 2026",
+  venue: "TERIGE BHAVANA, 11 BLOCK, 2ND STAGE, NAAGARABHAVI, BENGALURU, KARNATAKA 560072",
+  phone: "+91 9743334433",
+  email: "connect.eaf@gmail.com",
+  registrationFee: 499,
+
+  // Add your real backend / form endpoint here.
+  // Leave blank to run in demo mode.
+  formEndpoint: "",
+
+  // Optional success redirect. Leave blank to use the built-in success screen.
+  successRedirect: "",
+
+  maxUploadSizeMB: 5
+};
+
+const PAYMENT_CONFIG = {
+  // Replace with the official EAF UPI ID.
+  upiId: "YOUR_OFFICIAL_UPI_ID",
+  amount: 499,
+  qrImage: "assets/payment/upi-qr-placeholder.png"
+};
