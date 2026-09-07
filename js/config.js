@@ -20,7 +20,7 @@ const SITE_CONFIG = {
 
 const PAYMENT_CONFIG = {
   // Replace with the official EAF UPI ID.
-  upiId: "kumarprabal1706@okaxis",
+  upiId: "9901155111@sbi",
   amount: 499,
   qrImage: "assets/payment/QRC0de.jpeg"
 };

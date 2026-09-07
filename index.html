@@ -254,7 +254,7 @@
           <div class="people-grid">
             <article class="person reveal">
               <img
-                src="assets/images/leadership/dr-balasubrahmanya.jpg"
+                src="assets/images/leadership/dr-balasubrahmanya.jpeg"
                 alt="Dummy portrait for Dr. BALASUBRAHMANYA"
               />
               <h3>Dr. BALASUBRAHMANYA</h3>
@@ -262,7 +262,7 @@
             </article>
             <article class="person reveal">
               <img
-                src="assets/images/leadership/singam-amrutham.jpg"
+                src="assets/images/leadership/singam-amrutham.jpeg"
                 alt="Dummy portrait for SINGAM AMRUTHAM"
               />
               <h3>SINGAM AMRUTHAM</h3>
@@ -270,17 +270,13 @@
             </article>
             <article class="person reveal">
               <img
-                src="assets/images/leadership/suma.jpg"
+                src="assets/images/leadership/suma.jpeg"
                 alt="Dummy portrait for SUMA"
               />
               <h3>SUMA</h3>
               <p>TREASURER</p>
             </article>
           </div>
-          <p class="placeholder-note">
-            Portraits shown are dummy placeholders. Replace them with official
-            photographs when available.
-          </p>
         </div>
       </section>
 
@@ -297,31 +293,59 @@
           <div class="committee-grid">
             <article class="committee reveal">
               <img
-                src="assets/images/committee/neelakantappa.jpg"
+                src="assets/images/committee/Ramesh Kumar Sir Additional Commissioner Commercial Tax.jpeg"
                 alt="Dummy portrait for NEELAKANTAPPA"
               />
-              <h3>NEELAKANTAPPA</h3>
+              <h3>Shri Ramesh Kumar</h3>
+              <p>PRESIDENT</p>
             </article>
             <article class="committee reveal">
               <img
-                src="assets/images/committee/yoginath.jpg"
+                src="assets/images/committee/Verendra kumar Patil ACCT.jpeg"
                 alt="Dummy portrait for YOGINATH"
               />
-              <h3>YOGINATH</h3>
+              <h3>Shri Veerendra Patil</h3>
+              <p>VICE PRESIDENT</p>
             </article>
             <article class="committee reveal">
               <img
-                src="assets/images/committee/raghavendra.jpg"
+                src="assets/images/committee/Shri Muneendrappa.jpeg"
                 alt="Dummy portrait for RAGHAVENDRA"
               />
-              <h3>RAGHAVENDRA</h3>
+              <h3>Shri Muneendrappa</h3>
+              <p>General Secretary</p>
             </article>
             <article class="committee reveal">
               <img
-                src="assets/images/committee/ritanjali-s.jpg"
-                alt="Dummy portrait for RITANJALI S"
+                src="assets/images/committee/Girish H C -ACCT.jpeg  "
+                alt="Dummy portrait for Shri Girish H C"
               />
-              <h3>RITANJALI S</h3>
+              <h3>Shri Girish H C</h3>
+              <p>Joint Chief Secretary</p>
+            </article>
+            <article class="committee reveal">
+              <img
+                src="assets/images/committee/KUMARA V (JCCT).jpeg"
+                alt="Dummy portrait for Shri Kumar V"
+              />
+              <h3>Shri Kumar V</h3>
+              <p>Treasurer</p>
+            </article>
+            <article class="committee reveal">
+              <img
+                src="assets/images//leadership/Daniel-Park.webp"
+                alt="Dummy portrait for Shri Naveen K N"
+              />
+              <h3>Shri Naveen K N</h3>
+              <p>Organising Secretary</p>
+            </article>
+            <article class="committee reveal">
+              <img
+                src="assets/images/committee/Jayanthkumar (ACCT).jpg.jpeg "
+                alt="Dummy portrait for Shri Girish H C"
+              />
+              <h3>Shri Jayanthkumar M P</h3>
+              <p>I&C Secretary</p>
             </article>
           </div>
         </div>
@@ -443,16 +467,16 @@
                       name="fname"
                       required
                       autocomplete="given-name"
-                      placeholder="Your first name"
-                  /></label>
+                      placeholder="Your full name"
+                    /><span class="error-msg" id="error-fname"></span></label>
                   <label
                     >Mobile No.<input
                       name="mobile"
                       required
                       inputmode="tel"
                       autocomplete="tel"
-                      placeholder="+91"
-                  /></label>
+                      placeholder="10-digit mobile number"
+                    /><span class="error-msg" id="error-mobile"></span></label>
                   <label
                     >Mail Id<input
                       name="email"
@@ -460,14 +484,14 @@
                       required
                       autocomplete="email"
                       placeholder="you@example.com"
-                  /></label>
+                    /><span class="error-msg" id="error-email"></span></label>
                   <label
                     >Company Name<input
                       name="company_name"
                       required
                       autocomplete="organization"
                       placeholder="Company name"
-                  /></label>
+                    /><span class="error-msg" id="error-company_name"></span></label>
                   <label
                     >Company Type<select name="company_type" required>
                       <option value="">Select company type</option>
@@ -477,18 +501,19 @@
                       <option>LLP</option>
                       <option>One Person Company</option>
                       <option>Other</option>
-                    </select></label
+                    </select><span class="error-msg" id="error-company_type"></span></label
                   >
                   <label
-                    >GST No.<input name="gst_no" placeholder="GST number"
-                  /></label>
+                    >GST No.<input name="gst_no" placeholder="GST number (optional)"
+                    /><span class="error-msg" id="error-gst_no"></span></label
+                  >
                   <label class="full"
                     >Address<textarea
                       name="address"
                       required
                       rows="3"
                       placeholder="Business / correspondence address"
-                    ></textarea>
+                    ></textarea><span class="error-msg" id="error-address"></span>
                   </label>
                 </div>
                 <div class="payment-proof">
@@ -501,8 +526,8 @@
                       name="upi_id"
                       id="upiInput"
                       required
-                      placeholder="UPI ID used for payment"
-                  /></label>
+                      placeholder="UPI ID used for payment (e.g. name@upi)"
+                    /><span class="error-msg" id="error-upi_id"></span></label>
                   <label
                     >Payment Screenshot<input
                       name="payment_screenshot"
@@ -510,7 +535,7 @@
                       type="file"
                       required
                       accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                  /></label>
+                    /><span class="error-msg" id="error-payment_screenshot"></span></label>
                   <div class="preview" id="preview"></div>
                 </div>
                 <button class="btn submit-btn" type="submit" id="submitBtn">
@@ -572,9 +597,11 @@
     <footer class="footer">
       <div class="container footer-grid">
         <div>
-          <img src="assets/logos/eaf-logo-source.jpg" alt="EAF logo" />
-          <p>Entrepreneurs Awareness Forum</p>
-          <small>Learn. Connect. Grow.</small>
+          <a href="/">
+            <img src="assets/logos/g-f-logo.svg" alt="EAF logo" />
+          </a>
+          <!-- <p>Entrepreneurs Awareness Forum</p>
+          <small>Learn. Connect. Grow.</small> -->
         </div>
         <div>
           <small>ADDRESS</small>
